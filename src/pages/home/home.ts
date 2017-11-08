@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, PopoverController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, PopoverController, Content, LoadingController } from 'ionic-angular';
 import { LanguagePopupPage } from "../language-popup/language-popup";
 import { BookSelectPage } from "../book-select/book-select";
 import { BibleServiceProvider } from "../../providers/bible-service/bible-service";
@@ -12,6 +12,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   templateUrl: 'home.html',
 })
 export class HomePage {
+  @ViewChild(Content) content: Content;
 
   static language = new BehaviorSubject('english');
   static bookNo = new BehaviorSubject(0);
@@ -29,12 +30,19 @@ export class HomePage {
     public navParams: NavParams,
     public popoverCtrl: PopoverController,
     public bibleService: BibleServiceProvider,
-    public splashScreen: SplashScreen
+    public splashScreen: SplashScreen,
+    loadingCtrl: LoadingController
   ) {
     HomePage.language.subscribe(lang => {
+      let loading = loadingCtrl.create({
+        enableBackdropDismiss: false,
+        content: 'Loading'
+      })
+      loading.present();
+      
       this.bibleService.getBible().subscribe((data) => {
         HomePage.bibleData.next(data);
-        splashScreen.hide();
+        loading.dismiss();
       },
         error => {
           console.log(JSON.stringify(error));
@@ -83,5 +91,7 @@ export class HomePage {
       HomePage.chapterNo.next(HomePage.chapterNo.getValue() + 1)
     else
       HomePage.chapterNo.next(HomePage.chapterNo.getValue() - 1)
+
+    this.content.scrollToTop();
   }
 }

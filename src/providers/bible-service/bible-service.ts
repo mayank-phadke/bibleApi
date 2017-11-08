@@ -11,7 +11,7 @@ export class BibleServiceProvider {
   }
 
   getBible() {
-    let url = '/assets/lang/' + HomePage.language.getValue() + '.json';
+    let url = 'assets/lang/' + HomePage.language.getValue() + '.json';
     return this.http.get(url)
       .map(response => {
         return response.json();
