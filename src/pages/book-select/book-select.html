@@ -1,0 +1,11 @@
+<ion-list>
+  <ion-item *ngFor="let book of books; let i = index" (click)="toggleGroup(i)" [ngClass]="{active: isGroupShown(i)}">
+    {{book}}
+    <br><br>
+    <div *ngIf="isGroupShown(i)" text-wrap style="white-space: normal;">
+      <button class="box" *ngFor="let chapter of bible.Bible[i].Chapter; let j = index" (click)="chapterClick(j)">
+        {{j+1}}
+      </button>
+    </div>
+  </ion-item>
+</ion-list>
